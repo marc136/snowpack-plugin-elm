@@ -1,0 +1,19 @@
+{
+  "name": "snowpack-plugin-elm",
+  "version": "0.0.1",
+  "description": "An Elm plugin for Snowpack with HMR",
+  "main": "elm-plugin.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Elm",
+    "Snowpack"
+  ],
+  "author": "Marc Walter",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "snowpack": "^2.13.3"
+  }
+}
