@@ -106,24 +106,7 @@ async function elmHotInject(originalElmCodeJS) {
     }
   }
 
-  // splice in the HMR code
-  const regex = /(_Platform_export\([^]*)(}\(this\)\);)/;
-  const match = regex.exec(modifiedCode);
-
-  if (match === null) {
-    throw new Error(
-      'Compiled JS from the Elm compiler is not valid. You must use the Elm 0.19 compiler.',
-    );
-  }
-
-  return (
-    modifiedCode.slice(0, match.index) +
-    match[1] +
-    '\n\n' +
-    hmrCode +
-    '\n\n' +
-    match[2]
-  );
+  return modifiedCode + '\n\n' + hmrCode;
 }
 
 /**
