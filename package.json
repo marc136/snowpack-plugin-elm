@@ -4,6 +4,7 @@
   "description": "An Elm plugin for Snowpack with HMR",
   "main": "elm-plugin.js",
   "scripts": {
+    "format": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -14,6 +15,7 @@
   "license": "UNLICENSED",
   "private": true,
   "devDependencies": {
+    "prettier": "2.1.2",
     "snowpack": "^2.13.3"
   }
 }
