@@ -29,7 +29,7 @@ module.exports = (snowpackConfig, userPluginOptions) => {
 
         if (isHmrEnabled) {
           // TODO use the inject function from elm-hot
-          return toESM(iife);
+          return toHMR(iife);
         } else {
           return toESM(iife);
         }
@@ -45,6 +45,23 @@ module.exports = (snowpackConfig, userPluginOptions) => {
     },
   };
 };
+
+async function toHMR(step0) {
+  const debug = true;
+  async function writeDebug(name, content) {
+    if (debug) return;
+    return fs.writeFile(path.join(__dirname, '.temp', name), content);
+  }
+  writeDebug('step0.js', step0);
+
+  const step1 = toESM(step0);
+  await writeDebug('step1.js', step1);
+
+  const step2 = await elmHotInject(step1);
+  await writeDebug('step2.js', 'step2');
+
+  return step2;
+}
 
 /**
  * Inject the HMR code into the Elm compiler's JS output
