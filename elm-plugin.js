@@ -18,13 +18,17 @@ module.exports = (snowpackConfig, userPluginOptions) => {
       const args = { fileExt, filePath, isDev, isHmrEnabled };
       console.warn('elm-plugin.load()', args);
       try {
-        // TODO check isHmrEnabled and use the inject function from elm-hot
-
         const iife = await elm.compileToString([filePath], {
           debug: isDev,
           optimize: !isDev,
         });
-        return toESM(iife);
+
+        if (isHmrEnabled) {
+          // TODO use the inject function from elm-hot
+          return toESM(iife);
+        } else {
+          return toESM(iife);
+        }
       } catch (err) {
         console.error('ERROR:', err.message || err);
         throw err;
