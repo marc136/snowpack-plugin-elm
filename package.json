@@ -15,8 +15,10 @@
   "license": "UNLICENSED",
   "private": true,
   "devDependencies": {
+    "ava": "^3.13.0",
     "elm-hot": "^1.1.5",
     "node-elm-compiler": "^5.0.5",
+    "playwright": "^1.4.2",
     "prettier": "2.1.2",
     "snowpack": "^2.13.3"
   }
