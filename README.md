@@ -6,7 +6,7 @@
 
 - [ ] In ./example/
   - [x] `npx snowpack dev` renders Sandbox1.elm
-  - [ ] Add HMR for changes to Sandbox1.elm
+  - [x] Add HMR for changes to Sandbox1.elm
   - [ ] Add HMR for changes to Other.elm
   - [ ] Fix `npx snowpack build` (tries to build Other.elm which does not export a `main`)
 - [ ] Convert ./example to a playwright test
