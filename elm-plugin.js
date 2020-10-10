@@ -3,6 +3,10 @@ const path = require('path');
 const elm = require('node-elm-compiler');
 const elmHot = require('elm-hot');
 
+// TODO check into the sass plugin to register imported elm files
+// currently, it only picks up on the main file that was configured
+// https://github.com/pikapkg/snowpack/blob/73c4a71b8918b65ad0d062685441289ba9ef7c9e/plugins/plugin-sass/plugin.js
+
 module.exports = (snowpackConfig, userPluginOptions) => {
   return {
     name: 'elm-plugin',
