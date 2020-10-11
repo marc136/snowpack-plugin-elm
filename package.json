@@ -5,7 +5,7 @@
   "main": "elm-plugin.js",
   "scripts": {
     "format": "prettier --write .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava tests/integration/first.js"
   },
   "keywords": [
     "Elm",
@@ -17,9 +17,12 @@
   "devDependencies": {
     "ava": "^3.13.0",
     "elm-hot": "^1.1.5",
+    "execa": "^4.0.3",
+    "get-port": "^5.1.1",
     "node-elm-compiler": "^5.0.5",
     "playwright": "^1.4.2",
     "prettier": "2.1.2",
-    "snowpack": "^2.13.3"
+    "snowpack": "^2.13.3",
+    "touch": "^3.1.0"
   }
 }

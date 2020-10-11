@@ -1,0 +1,14 @@
+{
+  "mount": {
+    "public": "/",
+    "src": "/_dist_"
+  },
+  "plugins": [
+    ["../../../elm-plugin.js", { "optionA": "foo", "optionB": "bar" }]
+  ],
+  "devOptions": {
+    "port": 10560,
+    "open": "none",
+    "output": "stream"
+  }
+}
