@@ -27,8 +27,7 @@ module.exports = (snowpackConfig, userPluginOptions) => {
           optimize: !isDev,
         });
 
-        if (isHmrEnabled) {
-          // TODO use the inject function from elm-hot
+        if (isDev || isHmrEnabled) {
           return toHMR(iife);
         } else {
           return toESM(iife);
