@@ -4,6 +4,10 @@ const debug = false;
 const chromiumSettings = debug ? { headless: false, slowMo: 100 } : {};
 const browserPromise = chromium.launch(chromiumSettings);
 
+// refactor test setup
+// copy test code to a temp location
+// start snowpack on random port in temp location
+// stop snowpack server in finally
 async function pageMacro(t, callback) {
   const browser = await browserPromise;
   const page = await browser.newPage();
