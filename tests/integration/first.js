@@ -69,7 +69,7 @@ test(
   },
 );
 
-test.only(
+test(
   'Will hot-reload when changing Sandbox1.elm and retain the state',
   pageMacro,
   async (t, page) => {
@@ -97,6 +97,47 @@ test.only(
     t.is(await getCounterValue(), 2);
 
     touch(path.join(fullTestEnvPath, 'src/Sandbox1.elm'));
+    await waitForHotSwap('Sandbox1', page);
+
+    t.is(
+      await getCounterValue(),
+      2,
+      'The app state should be retained after hot-swap',
+    );
+
+    snowPackServer.cancel();
+  },
+);
+
+test.only(
+  'Will hot-reload when changing files that Sandbox1.elm  imports and retain the state',
+  pageMacro,
+  async (t, page) => {
+    const port = await getPort(); // TODO change pageMacro
+    const snowPackServer = execa.command(
+      `snowpack dev --port ${port} --config snowpack.config.json`,
+      options,
+    );
+    servers.push[snowPackServer];
+
+    await delay(2);
+
+    await page.goto(`http://localhost:${port}`);
+    await page.waitForSelector('#counter-value');
+
+    function getCounterValue() {
+      return page
+        .textContent('#counter-value')
+        .then((str) => Number.parseInt(str));
+    }
+
+    t.plan(3);
+    t.is(await getCounterValue(), 1);
+    await page.click('#add-1');
+    t.is(await getCounterValue(), 2);
+
+    // Snowpack1.elm imports Indirect.elm which imports Nested/Number8.elm
+    touch(path.join(fullTestEnvPath, 'src/Nested/Number8.elm'));
     await waitForHotSwap('Sandbox1', page);
 
     t.is(

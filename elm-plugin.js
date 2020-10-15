@@ -8,10 +8,12 @@ const elmHot = require('elm-hot');
 // https://github.com/pikapkg/snowpack/blob/73c4a71b8918b65ad0d062685441289ba9ef7c9e/plugins/plugin-sass/plugin.js
 
 module.exports = (snowpackConfig, userPluginOptions) => {
+  const elmModules = new Map();
+
   return {
     name: 'elm-plugin',
-
     resolve: { input: ['.elm'], output: ['.js'] },
+    verbose: true, // TODO make this configurable
 
     config(snowpackConfig) {
       // snowpack config was built and can be accessed here
@@ -27,6 +29,17 @@ module.exports = (snowpackConfig, userPluginOptions) => {
           optimize: !isDev,
         });
 
+        elm.findAllDependencies(filePath).then((deps) => {
+          if (this.verbose) {
+            console.log('elm-plugin-deps', { filePath, deps });
+          }
+          deps.forEach((depFilePath) => {
+            const known = elmModules.get(depFilePath) || [];
+            known.push(filePath);
+            elmModules.set(depFilePath, known);
+          });
+        });
+
         if (isDev || isHmrEnabled) {
           return toHMR(iife);
         } else {
@@ -38,9 +51,15 @@ module.exports = (snowpackConfig, userPluginOptions) => {
       }
     },
 
-    async onchange({ filePath }) {
-      // TODO use this to check Elm module dependencies and support HMR for imported modules
-      console.warn('elm-plugin.onchange', filePath);
+    async onChange({ filePath }) {
+      const modules = elmModules.get(filePath);
+      if (!modules) return;
+      modules.forEach((module) => {
+        if (this.verbose) {
+          console.log(`Will compile ${module} because ${filePath} was changed`);
+        }
+        this.markChanged(module);
+      });
     },
   };
 };
@@ -48,7 +67,7 @@ module.exports = (snowpackConfig, userPluginOptions) => {
 async function toHMR(step0) {
   const debug = true;
   async function writeDebug(name, content) {
-    if (debug) return;
+    if (!debug) return;
     return fs.writeFile(path.join(__dirname, '.temp', name), content);
   }
   writeDebug('step0.js', step0);

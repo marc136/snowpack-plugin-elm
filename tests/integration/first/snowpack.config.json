@@ -3,9 +3,7 @@
     "public": "/",
     "src": "/_dist_"
   },
-  "plugins": [
-    ["../../../elm-plugin.js", { "optionA": "foo", "optionB": "bar" }]
-  ],
+  "plugins": [["../../../elm-plugin.js", { "verbose": true }]],
   "devOptions": {
     "port": 10560,
     "open": "none",

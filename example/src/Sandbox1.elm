@@ -4,7 +4,8 @@ import Browser
 import Html exposing (Html, text)
 import Html.Attributes exposing (id)
 import Html.Events exposing (onClick)
-import Other
+import Indirect
+
 
 main =
     Browser.sandbox
@@ -20,7 +21,7 @@ type alias Model =
 
 init : Model
 init =
-    { count = Other.init }
+    { count = Indirect.init }
 
 
 type Msg

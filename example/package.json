@@ -9,6 +9,6 @@
   "dependencies": {},
   "devDependencies": {
     "prettier": "2.1.2",
-    "snowpack": "^2.13.3"
+    "snowpack": "^2.14.0"
   }
 }

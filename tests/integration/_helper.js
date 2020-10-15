@@ -1,5 +1,5 @@
 const { chromium } = require('playwright');
-const debug = false;
+const debug = true;
 
 const chromiumSettings = debug ? { headless: false, slowMo: 100 } : {};
 const browserPromise = chromium.launch(chromiumSettings);
