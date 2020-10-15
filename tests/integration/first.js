@@ -112,17 +112,8 @@ test(
 test.only(
   'Will hot-reload when changing files that Sandbox1.elm  imports and retain the state',
   pageMacro,
-  async (t, page) => {
-    const port = await getPort(); // TODO change pageMacro
-    const snowPackServer = execa.command(
-      `snowpack dev --port ${port} --config snowpack.config.json`,
-      options,
-    );
-    servers.push[snowPackServer];
-
-    await delay(2);
-
-    await page.goto(`http://localhost:${port}`);
+  async (t, page, server) => {
+    await page.goto(`${server}/index.html`);
     await page.waitForSelector('#counter-value');
 
     function getCounterValue() {
@@ -145,8 +136,6 @@ test.only(
       2,
       'The app state should be retained after hot-swap',
     );
-
-    snowPackServer.cancel();
   },
 );
 
