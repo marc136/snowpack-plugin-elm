@@ -13,7 +13,7 @@ module.exports = (snowpackConfig, userPluginOptions) => {
   return {
     name: 'elm-plugin',
     resolve: { input: ['.elm'], output: ['.js'] },
-    verbose: true, // TODO make this configurable
+    verbose: userPluginOptions.verbose || false,
 
     config(snowpackConfig) {
       // snowpack config was built and can be accessed here
