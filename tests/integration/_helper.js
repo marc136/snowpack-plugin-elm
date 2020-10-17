@@ -26,7 +26,8 @@ async function pageMacro(t, callback) {
   } finally {
     await page.close();
     await snowpack.stop();
-    console.log('Stopped server, will delete', workingDir)
+    if (verbose) console.log('Stopped server, will delete', workingDir);
+    // process.on('exit', () => fs.remove(workingDir));
     await fs.remove(workingDir);
   }
 }
