@@ -1,6 +1,6 @@
 {
   "name": "snowpack-plugin-elm",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "An Elm plugin for Snowpack with HMR",
   "main": "elm-plugin.js",
   "scripts": {
