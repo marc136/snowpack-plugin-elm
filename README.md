@@ -15,7 +15,7 @@
   - [ ] For a Browser.element (with ports)
   - [ ] For a Browser.document
   - [ ] For a Browser.application (with URL change)
-- [ ] Run tests in parallel from temp folders on random ports
+- [x] Run tests in parallel from temp folders on random ports
 - [ ] Enhance tests
   - [ ] Test that the browser page reloads after incompatible change elm-hot [`page.waitForNavigation/1`](https://playwright.dev/#version=v1.4.2&path=docs%2Fapi.md&q=pagewaitfornavigationoptions)
 - [ ] Ask for feedback
