@@ -4,11 +4,11 @@
 
 ## TODO
 
-- [ ] In ./example/
+- [x] In ./example/
   - [x] `npx snowpack dev` renders Sandbox1.elm
   - [x] Add HMR for changes to Sandbox1.elm
   - [x] Add HMR for changes to Indirect.elm (needs Snowpack >= 2.14.0)
-  - [ ] Fix `npx snowpack build` (tries to build Indirect.elm which does not export a `main`)
+  - [x] Fix `npx snowpack build` (tries to build Indirect.elm which does not export a `main`)
 - [x] Convert ./example to a playwright test
 - [ ] Add tests
   - [x] For a Browser.sandbox (see ./example/)

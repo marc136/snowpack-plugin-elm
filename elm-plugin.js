@@ -47,7 +47,10 @@ module.exports = (snowpackConfig, userPluginOptions) => {
           return toESM(iife);
         }
       } catch (err) {
-        console.error('ERROR:', err.message || err);
+        const ERROR_NO_MAIN = 'Compilation failed\nCompiling ...-- NO MAIN -';
+        if (err.message.startsWith(ERROR_NO_MAIN)) return;
+
+        if (this.debug) console.error(`ERROR: "${err.message}"`);
         throw err;
       }
     },
