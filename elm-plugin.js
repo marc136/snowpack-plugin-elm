@@ -1,4 +1,4 @@
-const fs = require('fs').promises;
+const fs = require('fs-extra');
 const path = require('path');
 const elm = require('node-elm-compiler');
 const elmHot = require('elm-hot');
@@ -70,13 +70,14 @@ async function toHMR(step0) {
     if (!debug) return;
     return fs.writeFile(path.join(__dirname, '.temp', name), content);
   }
+  if (debug) await fs.ensureDir(path.join(__dirname, '.temp'));
   writeDebug('step0.js', step0);
 
   const step1 = toESM(step0);
   await writeDebug('step1.js', step1);
 
   const step2 = await elmHotInject(step1);
-  await writeDebug('step2.js', 'step2');
+  await writeDebug('step2.js', step2);
 
   return step2;
 }
