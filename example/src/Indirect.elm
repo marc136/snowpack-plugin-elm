@@ -1,4 +1,4 @@
-module Other exposing (init)
+module Indirect exposing (init)
 
 import Nested.Hello as Hello
 import Nested.Number8
