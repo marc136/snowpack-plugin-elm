@@ -112,7 +112,7 @@ test(
 test.only(
   'Will hot-reload when changing files that Sandbox1.elm  imports and retain the state',
   pageMacro,
-  async (t, page, server) => {
+  async (t, page, server, workingDir) => {
     await page.goto(`${server}/index.html`);
     await page.waitForSelector('#counter-value');
 
@@ -128,7 +128,7 @@ test.only(
     t.is(await getCounterValue(), 2);
 
     // Snowpack1.elm imports Indirect.elm which imports Nested/Number8.elm
-    touch(path.join(fullTestEnvPath, 'src/Nested/Number8.elm'));
+    touch(path.join(workingDir, 'src/Nested/Number8.elm'));
     await waitForHotSwap('Sandbox1', page);
 
     t.is(
