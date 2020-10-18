@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const elm = require('node-elm-compiler');
-const elmHot = require('elm-hot');
+// const elmHot = require('elm-hot');
 
 module.exports = (snowpackConfig, userPluginOptions) => {
   const elmModules = new Map();
