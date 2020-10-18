@@ -19,7 +19,7 @@
 - [ ] Enhance tests
   - [ ] Test that the browser page reloads after incompatible change elm-hot [`page.waitForNavigation/1`](https://playwright.dev/#version=v1.4.2&path=docs%2Fapi.md&q=pagewaitfornavigationoptions)
 - [ ] Ask for feedback
-  - [ ] On https://www.pika.dev/npm/snowpack/discuss/319
+  - [x] On https://www.pika.dev/npm/snowpack/discuss/319
   - [ ] In elm slack
 
 ## Usage
