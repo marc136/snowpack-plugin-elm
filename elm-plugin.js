@@ -17,7 +17,8 @@ module.exports = (snowpackConfig, userPluginOptions) => {
 
     config(snowpackConfig) {
       // snowpack config was built and can be accessed here
-      console.warn('elm-plugin.config()');
+      // https://www.snowpack.dev/guides/plugins#config()
+      if (this.verbose) console.log('elm-plugin.config()', snowpackConfig);
     },
 
     async load({ fileExt, filePath, isDev, isHmrEnabled }) {
