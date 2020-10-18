@@ -58,7 +58,7 @@ module.exports = (snowpackConfig, userPluginOptions) => {
         if (this.verbose) {
           console.log(`Will compile ${module} because ${filePath} was changed`);
         }
-        this.markChanged(module);
+        if (typeof this.markChanged === 'function') this.markChanged(module);
       });
     },
   };
