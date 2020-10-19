@@ -12,8 +12,7 @@
     "Snowpack"
   ],
   "author": "Marc Walter",
-  "license": "UNLICENSED",
-  "private": true,
+  "license": "BSD-3-Clause",
   "dependencies": {
     "fs-extra": "^9.0.1",
     "node-elm-compiler": "^5.0.5"
