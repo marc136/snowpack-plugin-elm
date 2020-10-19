@@ -6,7 +6,7 @@ const fs = require('fs-extra');
 const replaceInFile = require('replace-in-file');
 const { chromium } = require('playwright');
 
-const debug = true;
+const debug = false;
 
 const chromiumSettings = debug ? { headless: false, slowMo: 100 } : {};
 const browserPromise = chromium.launch(chromiumSettings);
@@ -26,7 +26,7 @@ async function pageMacro(t, callback) {
   } finally {
     await page.close();
     await snowpack.stop();
-    if (verbose) console.log('Stopped server, will delete', workingDir);
+    if (debug) console.log('Stopped server, will delete', workingDir);
     // process.on('exit', () => fs.remove(workingDir));
     await fs.remove(workingDir);
   }
