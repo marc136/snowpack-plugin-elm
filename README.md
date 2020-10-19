@@ -1,5 +1,7 @@
 # Snowpack Elm Plugin
 
+This plugin adds support for the [Elm language](https://elm-lang.org) to any Snowpack project. With it, you can import \*.elm files and have them compile to JavaScript modules.
+
 **!! work-in-progress !!**
 
 ## TODO
@@ -23,6 +25,26 @@
   - [ ] In elm slack
 
 ## Usage
+
+Install `snowpack-plugin-elm`, for instance with `npm install --save-dev snowpack-plugin-elm`.
+
+Then add the plugin to your [Snowpack config, e.g. `snowpack.config.json`](https://www.snowpack.dev/#config-files)
+
+```json
+{
+  "plugins": ["snowpack-plugin-elm"]
+}
+```
+
+or with plugin options
+
+```json
+{
+  "plugins": [["snowpack-plugin-elm", { "verbose": false }]]
+}
+```
+
+## Development
 
 ### To play with the included example:
 
@@ -50,9 +72,9 @@ As described in [this Snowpack guide](https://www.snowpack.dev/guides/plugins#de
 
 5. In your example Snowpack project, add `snowpack-plugin-elm` to the snowpack.config.json along with any plugin options you’d like to test.
 
-## Tests
+### Tests
 
-Execute `npm test`
+Execute `npm test` to start the integration tests.
 
 ## Notes
 
