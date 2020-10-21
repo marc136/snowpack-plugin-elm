@@ -3,6 +3,8 @@ const path = require('path');
 const elm = require('node-elm-compiler');
 // const elmHot = require('elm-hot');
 
+let elmCompilerSingleton = Promise.resolve();
+
 module.exports = (snowpackConfig, userPluginOptions) => {
   const elmModules = new Map();
 
@@ -19,6 +21,9 @@ module.exports = (snowpackConfig, userPluginOptions) => {
 
     async load({ fileExt, filePath, isDev, isHmrEnabled }) {
       const args = { fileExt, filePath, isDev, isHmrEnabled };
+      if (this.verbose) console.info('aquiring lock to compile', filePath);
+      const releaseLock = await aquireLock();
+      if (this.verbose) console.info('aquired lock to compile', filePath);
 
       if (this.verbose) console.info('elm-plugin.load()', args);
       const result = await compile(filePath, isDev, isHmrEnabled);
@@ -34,6 +39,7 @@ module.exports = (snowpackConfig, userPluginOptions) => {
         });
       });
 
+      releaseLock();
       return result;
     },
 
@@ -152,4 +158,21 @@ function toESM(iife) {
     .replace(/^_Platform_export\(([^]*?);$/m, '/*\n$&\n*/')
     .concat('\n')
     .concat(`export const Elm = ${elmExports};\nexport default Elm;\n`);
+}
+
+/**
+ * The Elm compiler may only run once in the same folder at any given moment.
+ * If it runs multiple time, it will corrupt the elm-stuff folder for the other Elm compiler
+ * processes.
+ *
+ * This lock guarantees the sequential compilation of all Elm files.
+ */
+async function aquireLock() {
+  let release;
+  const before = elmCompilerSingleton;
+  elmCompilerSingleton = new Promise((resolve) => {
+    release = resolve;
+  });
+  await before;
+  return release;
 }
