@@ -19,36 +19,22 @@ module.exports = (snowpackConfig, userPluginOptions) => {
 
     async load({ fileExt, filePath, isDev, isHmrEnabled }) {
       const args = { fileExt, filePath, isDev, isHmrEnabled };
-      console.warn('elm-plugin.load()', args);
-      try {
-        const iife = await elm.compileToString([filePath], {
-          debug: isDev,
-          optimize: !isDev,
-        });
 
-        elm.findAllDependencies(filePath).then((deps) => {
-          if (this.verbose) {
-            console.log('elm-plugin-deps', { filePath, deps });
-          }
-          deps.forEach((depFilePath) => {
-            const known = elmModules.get(depFilePath) || [];
-            known.push(filePath);
-            elmModules.set(depFilePath, known);
-          });
-        });
+      if (this.verbose) console.info('elm-plugin.load()', args);
+      const result = await compile(filePath, isDev, isHmrEnabled);
 
-        if (isDev || isHmrEnabled) {
-          return toHMR(iife);
-        } else {
-          return toESM(iife);
+      elm.findAllDependencies(filePath).then((deps) => {
+        if (this.verbose) {
+          console.log('elm-plugin-deps', { filePath, deps });
         }
-      } catch (err) {
-        const ERROR_NO_MAIN = '-- NO MAIN --';
-        if (err.message.includes(ERROR_NO_MAIN)) return;
+        deps.forEach((depFilePath) => {
+          const known = elmModules.get(depFilePath) || [];
+          known.push(filePath);
+          elmModules.set(depFilePath, known);
+        });
+      });
 
-        if (this.debug) console.error(`ERROR: "${err.message}"`);
-        throw err;
-      }
+      return result;
     },
 
     async onChange({ filePath }) {
@@ -63,6 +49,29 @@ module.exports = (snowpackConfig, userPluginOptions) => {
     },
   };
 };
+
+async function compile(filePath, isDev, isHmrEnabled) {
+  const iife = await elm
+    .compileToString([filePath], {
+      debug: isDev,
+      optimize: !isDev,
+    })
+    .catch((err) => {
+      // Snowpack tries to compile all .elm files, but the compiler needs an exposed `main`.
+      // We only need to compile the main files, the compiler will resolve dependencies.
+      const ERROR_NO_MAIN = '-- NO MAIN --';
+      if (err.message.includes(ERROR_NO_MAIN)) return;
+
+      throw err;
+    });
+  if (!iife) return;
+
+  if (isDev || isHmrEnabled) {
+    return toHMR(iife);
+  } else {
+    return toESM(iife);
+  }
+}
 
 async function toHMR(step0) {
   const debug = true;
