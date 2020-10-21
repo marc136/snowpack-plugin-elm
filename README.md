@@ -26,6 +26,8 @@ This plugin adds support for the [Elm language](https://elm-lang.org) to any Sno
 
 ## Usage
 
+### Add the plugin to a Snowpack project
+
 Install `snowpack-plugin-elm`, for instance with `npm install --save-dev snowpack-plugin-elm`.
 
 Then add the plugin to your [Snowpack config, e.g. `snowpack.config.json`](https://www.snowpack.dev/#config-files)
@@ -44,9 +46,7 @@ or with plugin options
 }
 ```
 
-## Development
-
-### To play with the included example:
+### Or play with the included example first
 
 ```sh
 cd example
@@ -54,6 +54,8 @@ npm install
 npx snowpack dev
 # and then change src/Sandbox1.elm
 ```
+
+## Development
 
 ### To use it on another project
 
