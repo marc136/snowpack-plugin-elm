@@ -71,7 +71,7 @@ async function toHMR(step0) {
     return fs.writeFile(path.join(__dirname, '.temp', name), content);
   }
   if (debug) await fs.ensureDir(path.join(__dirname, '.temp'));
-  writeDebug('step0.js', step0);
+  await writeDebug('step0.js', step0);
 
   const step1 = toESM(step0);
   await writeDebug('step1.js', step1);
