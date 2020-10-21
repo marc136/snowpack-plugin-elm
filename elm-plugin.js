@@ -28,11 +28,14 @@ module.exports = (snowpackConfig, userPluginOptions) => {
       if (this.verbose) console.info('elm-plugin.load()', args);
       const result = await compile(filePath, isDev, isHmrEnabled);
 
-      storeDependenciesForHmr(filePath, elmModules).then((deps) => {
-        if (this.verbose) {
-          console.log('elm-plugin-deps', { filePath, deps });
-        }
-      });
+      if (isHmrEnabled) {
+        // We don't need to wait for this to finish
+        storeDependenciesForHmr(filePath, elmModules).then((deps) => {
+          if (this.verbose) {
+            console.log('elm-plugin-deps', { filePath, deps });
+          }
+        });
+      }
 
       releaseLock();
       return result;
