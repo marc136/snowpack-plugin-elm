@@ -28,15 +28,10 @@ module.exports = (snowpackConfig, userPluginOptions) => {
       if (this.verbose) console.info('elm-plugin.load()', args);
       const result = await compile(filePath, isDev, isHmrEnabled);
 
-      elm.findAllDependencies(filePath).then((deps) => {
+      storeDependenciesForHmr(filePath, elmModules).then((deps) => {
         if (this.verbose) {
           console.log('elm-plugin-deps', { filePath, deps });
         }
-        deps.forEach((depFilePath) => {
-          const known = elmModules.get(depFilePath) || [];
-          known.push(filePath);
-          elmModules.set(depFilePath, known);
-        });
       });
 
       releaseLock();
@@ -158,6 +153,20 @@ function toESM(iife) {
     .replace(/^_Platform_export\(([^]*?);$/m, '/*\n$&\n*/')
     .concat('\n')
     .concat(`export const Elm = ${elmExports};\nexport default Elm;\n`);
+}
+
+/**
+ * @param {string} filePath - an Elm module
+ * @param {Map<string, Set<string>>} elmModules - map of all known Elm modules and Set of other modules that import the key module
+ */
+async function storeDependenciesForHmr(filePath, elmModules) {
+  const deps = await elm.findAllDependencies(filePath);
+  deps.forEach((depFilePath) => {
+    const known = elmModules.get(depFilePath) || new Set();
+    known.add(filePath);
+    elmModules.set(depFilePath, known);
+  });
+  return deps;
 }
 
 /**
