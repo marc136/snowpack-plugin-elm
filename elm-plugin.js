@@ -3,6 +3,8 @@ const path = require('path');
 const elm = require('node-elm-compiler');
 // const elmHot = require('elm-hot');
 
+const prefix = '[elm-plugin]';
+
 let elmCompilerSingleton = Promise.resolve();
 
 module.exports = (snowpackConfig, userPluginOptions) => {
@@ -16,23 +18,24 @@ module.exports = (snowpackConfig, userPluginOptions) => {
     config(snowpackConfig) {
       // snowpack config was built and can be accessed here
       // https://www.snowpack.dev/guides/plugins#config()
-      if (this.verbose) console.log('elm-plugin.config()', snowpackConfig);
+      // if (this.verbose) console.info(prefix, 'snowpackConfig', snowpackConfig);
     },
 
-    async load({ fileExt, filePath, isDev, isHmrEnabled }) {
-      const args = { fileExt, filePath, isDev, isHmrEnabled };
-      if (this.verbose) console.info('aquiring lock to compile', filePath);
+    async load({ filePath, isDev, isHmrEnabled }) {
+      const file = rel(filePath);
+      if (this.verbose) console.info(prefix, 'aquiring lock to compile', file);
       const releaseLock = await aquireLock();
-      if (this.verbose) console.info('aquired lock to compile', filePath);
+      if (this.verbose) console.info(prefix, 'aquired lock to compile', file);
 
-      if (this.verbose) console.info('elm-plugin.load()', args);
+      const args = { file, isDev, isHmrEnabled };
+      if (this.verbose) console.info(prefix, 'load', args);
       const result = await compile(filePath, isDev, isHmrEnabled);
 
       if (isHmrEnabled) {
         // We don't need to wait for this to finish
         storeDependenciesForHmr(filePath, elmModules).then((deps) => {
           if (this.verbose) {
-            console.log('elm-plugin-deps', { filePath, deps });
+            console.info(prefix, file, 'imports', deps.map(rel));
           }
         });
       }
@@ -46,13 +49,24 @@ module.exports = (snowpackConfig, userPluginOptions) => {
       if (!modules) return;
       modules.forEach((module) => {
         if (this.verbose) {
-          console.log(`Will compile ${module} because ${filePath} was changed`);
+          console.info(
+            prefix,
+            `Will compile ${rel(module)} because ${rel(filePath)} was changed`,
+          );
         }
         if (typeof this.markChanged === 'function') this.markChanged(module);
       });
     },
   };
 };
+
+/**
+ * Shortens an absolute path to a relative one
+ * @param {string} filePath
+ */
+function rel(filePath) {
+  return path.relative(process.cwd(), filePath);
+}
 
 async function compile(filePath, isDev, isHmrEnabled) {
   const iife = await elm
