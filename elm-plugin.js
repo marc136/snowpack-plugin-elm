@@ -67,7 +67,7 @@ async function compile(filePath, isDev, isHmrEnabled) {
     });
   if (!iife) return;
 
-  if (isDev || isHmrEnabled) {
+  if (isHmrEnabled) {
     return toHMR(iife);
   } else {
     return toESM(iife);
