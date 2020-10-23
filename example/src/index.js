@@ -1,7 +1,7 @@
 import Elm from './Sandbox1.elm';
-console.warn('Elm', Elm);
+console.info('Imported Elm', Elm);
 
-if (import.meta.hot.data) {
+if (import.meta.hot && import.meta.hot.data) {
   console.info('We got import.meta.hot.data', import.meta.hot.data);
 }
 
@@ -11,7 +11,7 @@ const elm = Elm.Sandbox1.init({
   // create a new child node for HMR, as elm replaces it
   node: node.appendChild(document.createElement('div')),
 });
-console.warn('elm', elm);
+console.info('Elm instance', elm);
 
 if (import.meta.hot) {
   // Receive any updates from the dev server, and update accordingly.
