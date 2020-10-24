@@ -3,7 +3,8 @@ const path = require('path');
 const elm = require('node-elm-compiler');
 // const elmHot = require('elm-hot');
 
-const prefix = '[elm-plugin]';
+const name = 'elm-plugin';
+const prefix = `[${name}]`;
 
 let elmCompilerSingleton = Promise.resolve();
 
@@ -11,7 +12,7 @@ module.exports = (snowpackConfig, userPluginOptions) => {
   const elmModules = new Map();
 
   return {
-    name: 'elm-plugin',
+    name,
     resolve: { input: ['.elm'], output: ['.js'] },
     verbose: userPluginOptions.verbose || false,
 
