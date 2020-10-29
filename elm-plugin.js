@@ -10,32 +10,37 @@ let elmCompilerSingleton = Promise.resolve();
 
 module.exports = (snowpackConfig, userPluginOptions) => {
   const elmModules = new Map();
+  const options = sanitizeOptions(userPluginOptions);
 
   return {
     name,
     resolve: { input: ['.elm'], output: ['.js'] },
-    verbose: userPluginOptions.verbose || false,
+    options,
 
     config(snowpackConfig) {
       // snowpack config was built and can be accessed here
       // https://www.snowpack.dev/guides/plugins#config()
-      // if (this.verbose) console.info(prefix, 'snowpackConfig', snowpackConfig);
+      // if (options.verbose) console.info(prefix, 'snowpackConfig', snowpackConfig);
     },
 
     async load({ filePath, isDev, isHmrEnabled }) {
       const file = rel(filePath);
-      if (this.verbose) console.info(prefix, 'aquiring lock to compile', file);
+      if (options.verbose) {
+        console.info(prefix, 'aquiring lock to compile', file);
+      }
       const releaseLock = await aquireLock();
-      if (this.verbose) console.info(prefix, 'aquired lock to compile', file);
+      if (options.verbose) {
+        console.info(prefix, 'aquired lock to compile', file);
+      }
 
       const args = { file, isDev, isHmrEnabled };
-      if (this.verbose) console.info(prefix, 'load', args);
+      if (options.verbose) console.info(prefix, 'load', args);
       const result = await compile(filePath, isDev, isHmrEnabled);
 
       if (isHmrEnabled) {
         // We don't need to wait for this to finish
         storeDependenciesForHmr(filePath, elmModules).then((deps) => {
-          if (this.verbose) {
+          if (options.verbose) {
             console.info(prefix, file, 'imports', deps.map(rel));
           }
         });
@@ -49,7 +54,7 @@ module.exports = (snowpackConfig, userPluginOptions) => {
       const modules = elmModules.get(filePath);
       if (!modules) return;
       modules.forEach((module) => {
-        if (this.verbose) {
+        if (options.verbose) {
           console.info(
             prefix,
             `Will compile ${rel(module)} because ${rel(filePath)} was changed`,
@@ -60,6 +65,15 @@ module.exports = (snowpackConfig, userPluginOptions) => {
     },
   };
 };
+
+function sanitizeOptions(userPluginOptions) {
+  const defaultOptions = {
+    verbose: false,
+  };
+  const options = { ...defaultOptions, ...userPluginOptions };
+
+  return options;
+}
 
 /**
  * Shortens an absolute path to a relative one
