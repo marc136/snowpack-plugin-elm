@@ -35,7 +35,7 @@ module.exports = (snowpackConfig, userPluginOptions) => {
 
       const args = { file, isDev, isHmrEnabled };
       if (options.verbose) console.info(prefix, 'load', args);
-      const result = await compile(filePath, isDev, isHmrEnabled);
+      const result = await compile(filePath, isDev, isHmrEnabled, options);
 
       if (isHmrEnabled) {
         // We don't need to wait for this to finish
@@ -69,8 +69,19 @@ module.exports = (snowpackConfig, userPluginOptions) => {
 function sanitizeOptions(userPluginOptions) {
   const defaultOptions = {
     verbose: false,
+    debugger: 'dev',
   };
   const options = { ...defaultOptions, ...userPluginOptions };
+
+  function mustBeOneOf(key, allowed) {
+    if (!allowed.includes(options[key])) {
+      const current = `"${key}": "${options.debugger}"`;
+      const expected = `Should be one of "${allowed.join('", "')}".`;
+      throw new Error(`${prefix} Invalid option '${current}'. ${expected}`);
+    }
+  }
+
+  mustBeOneOf('debugger', ['never', 'dev', 'always']);
 
   return options;
 }
@@ -83,10 +94,12 @@ function rel(filePath) {
   return path.relative(process.cwd(), filePath);
 }
 
-async function compile(filePath, isDev, isHmrEnabled) {
+async function compile(filePath, isDev, isHmrEnabled, options) {
+  const debug =
+    options.debugger === 'always' || (isDev && options.debugger === 'dev');
   const iife = await elm
     .compileToString([filePath], {
-      debug: isDev,
+      debug,
       optimize: !isDev,
     })
     .catch((err) => {

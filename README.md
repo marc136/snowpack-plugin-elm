@@ -4,6 +4,18 @@ This plugin adds support for the [Elm language](https://elm-lang.org) to any Sno
 
 ## Usage
 
+### Plugin options
+
+Default values:
+
+```js
+{
+  "verbose": false,
+  // When to enable Elm's time-traveling debugger
+  "debugger": "dev" // One of "never", "dev" (only on `snowpack dev`) or "always"
+}
+```
+
 ### Add the plugin to a Snowpack project
 
 Install `snowpack-plugin-elm`, for instance with `npm install --save-dev snowpack-plugin-elm`.

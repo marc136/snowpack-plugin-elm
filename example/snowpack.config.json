@@ -3,7 +3,7 @@
     "public": "/",
     "src": "/_dist_"
   },
-  "plugins": [["../elm-plugin.js", { "verbose": true }]],
+  "plugins": [["../elm-plugin.js", { "verbose": true, "debugger": "dev" }]],
   "devOptions": {
     "open": "none",
     "output": "stream"
