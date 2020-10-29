@@ -12,9 +12,13 @@ Default values:
 {
   "verbose": false,
   // When to enable Elm's time-traveling debugger
-  "debugger": "dev" // One of "never", "dev" (only on `snowpack dev`) or "always"
+  "debugger": "dev", // One of "never", "dev" (only on `snowpack dev`) or "always"
+  "optimize": "build", // One of "never", "build" (only on `snowpack build`) or "always
 }
 ```
+
+Note: The Elm `debugger` needs information that is stripped away when using `optimize`, so a setting like `{ "debugger": "always", "optimize": "build" }` would fail and is rejected by the plugin.  
+If you want to e.g. have a build with an enabled debugger, you need to use `{ "debugger": "always", "optimize": "never" }`.
 
 ### Add the plugin to a Snowpack project
 

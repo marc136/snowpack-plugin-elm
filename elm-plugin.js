@@ -70,6 +70,7 @@ function sanitizeOptions(userPluginOptions) {
   const defaultOptions = {
     verbose: false,
     debugger: 'dev',
+    optimize: 'build',
   };
   const options = { ...defaultOptions, ...userPluginOptions };
 
@@ -82,6 +83,15 @@ function sanitizeOptions(userPluginOptions) {
   }
 
   mustBeOneOf('debugger', ['never', 'dev', 'always']);
+  mustBeOneOf('optimize', ['never', 'build', 'always']);
+
+  if (
+    (options.debugger === 'always' && options.optimize !== 'never') ||
+    (options.optimize === 'always' && options.debugger !== 'never')
+  ) {
+    const err = `debugger="${options.debugger}" and optimize="${options.optimize}"`;
+    throw new Error(`${prefix} Invalid option combination ${err}.`);
+  }
 
   return options;
 }
@@ -97,11 +107,11 @@ function rel(filePath) {
 async function compile(filePath, isDev, isHmrEnabled, options) {
   const debug =
     options.debugger === 'always' || (isDev && options.debugger === 'dev');
+  const optimize =
+    options.optimize === 'always' || (!isDev && options.optimize === 'build');
+
   const iife = await elm
-    .compileToString([filePath], {
-      debug,
-      optimize: !isDev,
-    })
+    .compileToString([filePath], { debug, optimize })
     .catch((err) => {
       // Snowpack tries to compile all .elm files, but the compiler needs an exposed `main`.
       // We only need to compile the main files, the compiler will resolve dependencies.
