@@ -13,7 +13,7 @@ Default values:
   "verbose": false,
   // When to enable Elm's time-traveling debugger
   "debugger": "dev", // One of "never", "dev" (only on `snowpack dev`) or "always"
-  "optimize": "build", // One of "never", "build" (only on `snowpack build`) or "always
+  "optimize": "build", // One of "never", "build" (only on `snowpack build`) or "always"
 }
 ```
 
