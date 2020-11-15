@@ -199,13 +199,13 @@ async function elmHotInject(originalElmCodeJS) {
  */
 function toESM(iife) {
   // Copied from https://github.com/ChristophP/elm-esm/blob/17e7f56aa1ec313f0ab0c47ef15142ba64fd9169/src/index.js
-  const elmExports = iife.match(/^_Platform_export\(([^]*?)\);/m)[1];
+  const elmExports = iife.match(/^_Platform_export\(([^]*)\);}\(this\)\);/m)[1];
   return iife
     .replace(/^\(function\(scope\)\{$/m, '// -- $&')
     .replace(/^'use strict';$/m, '// -- $&')
     .replace(/function _Platform_export([^]*?)\n\}\n/g, '/*\n$&\n*/')
     .replace(/function _Platform_mergeExports([^]*?)\n\}\n/g, '/*\n$&\n*/')
-    .replace(/^_Platform_export\(([^]*?);$/m, '/*\n$&\n*/')
+    .replace(/^_Platform_export\(([^]*?)\(this\)\);$/m, '/*\n$&\n*/')
     .concat('\n')
     .concat(`export const Elm = ${elmExports};\nexport default Elm;\n`);
 }
