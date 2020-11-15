@@ -33,8 +33,11 @@ module.exports = (snowpackConfig, userPluginOptions) => {
         console.info(prefix, 'aquired lock to compile', file);
       }
 
-      const args = { file, isDev, isHmrEnabled };
-      if (options.verbose) console.info(prefix, 'load', args);
+      if (options.verbose) {
+        const args = { file, isDev, isHmrEnabled };
+        console.info(prefix, 'load', args);
+      }
+
       const result = await compile(filePath, isDev, isHmrEnabled, options);
 
       if (isHmrEnabled) {
