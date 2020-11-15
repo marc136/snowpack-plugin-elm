@@ -58,7 +58,7 @@ test(
 );
 
 test(
-  'Will hot-reload when changing files that Sandbox1.elm  imports and retain the state',
+  'Will hot-reload when changing files that Sandbox1.elm imports and retain the state',
   pageMacro,
   async (t, page, server, workingDir) => {
     await page.goto(`${server}/index.html`);
@@ -75,6 +75,29 @@ test(
     t.is(
       await getCounterValue(page),
       2,
+      'The app state should be retained after hot-swap',
+    );
+  },
+);
+
+test(
+  'Will compile a Browser.document where Flags is a record (issue #3)',
+  pageMacro,
+  async (t, page, server, workingDir) => {
+    await page.goto(`${server}/documentWithRecordFlags.html`);
+    await page.waitForSelector('#counter-value');
+
+    t.is(await getCounterValue(page), 11);
+    await page.click('#add-1');
+    t.is(await getCounterValue(page), 12);
+
+    // Snowpack1.elm imports Indirect.elm which imports Nested/Number8.elm
+    touch(path.join(workingDir, 'src/Nested/Number8.elm'));
+    await waitForHotSwap('DocumentWithRecordFlags', page, t);
+
+    t.is(
+      await getCounterValue(page),
+      12,
       'The app state should be retained after hot-swap',
     );
   },
