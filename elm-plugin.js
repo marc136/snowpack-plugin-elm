@@ -38,19 +38,23 @@ module.exports = (snowpackConfig, userPluginOptions) => {
         console.info(prefix, 'load', args);
       }
 
-      const result = await compile(filePath, isDev, isHmrEnabled, options);
+      try {
+        const result = await compile(filePath, isDev, isHmrEnabled, options);
 
-      if (isHmrEnabled) {
-        // We don't need to wait for this to finish
-        storeDependenciesForHmr(filePath, elmModules).then((deps) => {
-          if (options.verbose) {
-            console.info(prefix, file, 'imports', deps.map(rel));
-          }
-        });
+        if (isHmrEnabled) {
+          // We don't need to wait for this to finish
+          storeDependenciesForHmr(filePath, elmModules).then((deps) => {
+            if (options.verbose) {
+              console.info(prefix, file, 'imports', deps.map(rel));
+            }
+          });
+        }
+        releaseLock();
+        return result;
+      } catch (ex) {
+        releaseLock();
+        throw ex;
       }
-
-      releaseLock();
-      return result;
     },
 
     async onChange({ filePath }) {
