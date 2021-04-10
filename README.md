@@ -49,6 +49,59 @@ npx snowpack dev
 # and then change src/Sandbox1.elm
 ```
 
+## Building for production (IMPORTANT)
+
+When `snowpack build` is used, it will copy all elm files into the distribution directory.  
+See [issue 8](https://github.com/marc136/snowpack-plugin-elm/issues/8) and [issue 9](https://github.com/marc136/snowpack-plugin-elm/issues/9).
+This buggy behavior exists in all snowpack versions 3.0.x and was not fixed yet as of 2021-04-10.
+
+### Fix 1: Remove all `.elm` files from the build folder
+One option is to remove all `.elm` files afterwards. E.g. by specifying in package.json:
+
+```json
+{
+  "scripts": {
+    "build": "snowpack build && find build -name '*.elm' -type f -delete"
+  }
+}
+```
+
+And then running `npm run build` or `yarn build`.
+
+
+### Fix 2: Specify dynamic `exclude` options
+
+Adapted from [this example](https://github.com/marc136/snowpack-template-elm/blob/main/snowpack.config.js) which was inspired by [a comment](https://github.com/marc136/snowpack-plugin-elm/issues/8#issuecomment-810657940):
+
+```js
+const fg = require('fast-glob');
+
+function excludeEverythingButEntryPoints(entryPoints) {
+  if (process.env.NODE_ENV === 'development') return [];
+
+  if (!Array.isArray(entryPoints)) entryPoints = [entryPoints];
+
+  // If our main entry points are in nested subfolders of 'src/', we can instead use
+  // `fg.sync('src/**/*.elm')` and remove the `concat('*/*.elm')`.
+  return fg
+    .sync('src/*.elm', {
+      ignore: entryPoints.map((v) => `src/${v}`),
+    })
+    .map((v) => v.replace(/^src\//, ''))
+    .concat('*/*.elm');
+}
+
+module.exports = {
+  mount: {
+    public: '/',
+    src: '/_dist_',
+  },
+  exclude: excludeEverythingButEntryPoints('Sandbox1.elm'),
+  plugins: [['snowpack-plugin-elm', { verbose: false }]],
+};
+```
+
+
 ## Development
 
 ### To use it on another project
