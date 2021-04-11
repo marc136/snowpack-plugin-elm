@@ -55,6 +55,8 @@ When `snowpack build` is used, it will copy all elm files into the distribution 
 See [issue 8](https://github.com/marc136/snowpack-plugin-elm/issues/8) and [issue 9](https://github.com/marc136/snowpack-plugin-elm/issues/9).
 This buggy behavior exists in all snowpack versions 3.0.x and was not fixed yet as of 2021-04-10.
 
+In snowpack 3.1.0 and above it is even worse, the build will fail completely.
+
 ### Fix: Specify dynamic `exclude` options
 
 Adapted from [this example](https://github.com/marc136/snowpack-template-elm/blob/main/snowpack.config.js) which was inspired by [a comment](https://github.com/marc136/snowpack-plugin-elm/issues/8#issuecomment-810657940):
